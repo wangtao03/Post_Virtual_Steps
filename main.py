@@ -7,7 +7,7 @@ import urllib.parse
 
 import requests
 
-users = os.environ['USERS']
+users = json.loads(os.environ['USERS'])
 mobile = {
     "brand": os.environ['BRAND'],
     "model": os.environ['MODEL'],
@@ -91,9 +91,8 @@ if __name__ == '__main__':
     server_datetime = datetime.datetime.now()
     timezone = datetime.timezone(datetime.timedelta(hours=8))
     beijing_datetime = datetime.datetime.now(tz=timezone)
-    print(f"当地时间:\t{server_datetime.strftime('%Y年%m月%d日 %H时%M分%S秒')}\r\n"
-          f"北京时间:\t{beijing_datetime.strftime('%Y年%m月%d日 %H时%M分%S秒')}")
-
+    print(f"当地时间:\t{server_datetime.strftime('%Y年%m月%d日 %H时%M分%S秒')}")
+    print(f"北京时间:\t{beijing_datetime.strftime('%Y年%m月%d日 %H时%M分%S秒')}")
     print(f"待达标: {len(users)}人")
     i = 0
     for user in users:
