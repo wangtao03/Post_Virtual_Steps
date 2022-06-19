@@ -1,7 +1,7 @@
 import datetime
 import json
 import os
-import random
+import hashlib
 import time
 import urllib.parse
 
@@ -15,10 +15,31 @@ mobile = {
     "deviceid": os.environ['DEVICE_ID']
 }
 
+def singGenerator(value: dict) -> str:
+    text = '{' \
+           f'"app_imei":"{value["app_imei"]}",' \
+           f'"app_type":"{value["app_type"]}",' \
+           f'"app_version":"{value["app_version"]}",' \
+           f'"brand":"{value["brand"]}",' \
+           f'"data_source":"{value["data_source"]}",' \
+           f'"mHuaWeiStep":"{value["mHuaWeiStep"]}",' \
+           f'"mPhoneServerStepIncreased":"{value["mPhoneServerStepIncreased"]}",' \
+           f'"mPhoneStep":"{value["mPhoneStep"]}",' \
+           f'"mServerStep":"{value["mServerStep"]}",' \
+           f'"mTotalStep":"{value["mTotalStep"]}",' \
+           f'"mWechatStep":"{value["mWechatStep"]}",' \
+           f'"model":"{value["model"]}",' \
+           f'"os_version":"{value["os_version"]}",' \
+           f'"request_time":"{value["request_time"]}",' \
+           f'"sport_type":"{value["sport_type"]}",' \
+           f'"step_count":"{value["step_count"]}",' \
+           f'"time_str":"{value["time_str"]}",' \
+           f'"time_zone":"{value["time_zone"]}",' \
+           f'"token":"{value["token"]}"' \
+           '}willgoapi_beijing_api_key'
 
-def singGenerator(length: int = 32) -> str:
-    CODE_CHARS = "abcdefghijklmnopqrstuvwxyz0123456789"
-    return "".join(random.choice(CODE_CHARS) for _ in range(length))
+    md5 = hashlib.md5(text.encode("utf-8")).hexdigest()
+    return md5
 
 
 def getMaxSteps() -> int:
@@ -60,7 +81,7 @@ class Sport:
             "mHuaWeiStep": "0",
             "os_version": mobile["version"],
             "step_count": maxSteps,
-            "sign": singGenerator(),
+            "sign": "",
             "time_zone": "GMT+08:00",
             "mPhoneStep": maxSteps,
             "time_str": timestamp,
@@ -75,6 +96,7 @@ class Sport:
             "sport_type": "0",
             "mPhoneServerStepIncreased": "0"
         }
+        value["sign"] = singGenerator(value)
         data = urllib.parse.urlencode(value)
         try:
             response = requests.post(self.url, data=data, headers=headers, allow_redirects=False, timeout=30)
@@ -83,7 +105,7 @@ class Sport:
                 return True
             else:
                 return False
-        except():
+        except ():
             return False
 
 
