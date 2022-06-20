@@ -57,7 +57,7 @@ def getMaxSteps() -> int:
 
 class Sport:
     url = "https://capi.wewillpro.com/sport/addSportRecord"
-    app_version = "2.7.8"  # APP版本
+    app_version = "2.8.1"  # APP版本
 
     def postSportRecord(self, token: str) -> bool:
         headers = {
